@@ -24,11 +24,24 @@ class BurgerBuilder extends Component {
             cheese: 0,
             meat: 0
         },
-        totalPrice: 4
+        totalPrice: 4,
+        purchaseable: false
+    }
+
+    updatePurchaseState = (updatedIngredients) => {
+        const sum = Object.keys(updatedIngredients)
+            .map(igKey => {
+                return updatedIngredients[igKey];
+            })
+            .reduce((sum, num) => sum += num, 0);
+        this.setState({purchaseable: sum > 0});
     }
 
     changeIngredientHandler = (type, change) => {
         let countCopy = this.state.ingredients[type];
+        if (countCopy <= 0 && change === "MINUS") {
+            return;
+        }
         change === "ADD" ? countCopy++ : countCopy--;
         const updatedIngredients = {
             ...this.state.ingredients
@@ -38,14 +51,27 @@ class BurgerBuilder extends Component {
         const oldPrice = this.state.totalPrice;
         const newPrice = change === "ADD" ? oldPrice + priceChange : oldPrice - priceChange;
         this.setState({totalPrice: newPrice, ingredients: updatedIngredients});
+        this.updatePurchaseState(updatedIngredients);
     }
 
     render () {
+
+        const disabledInfo = {
+            ...this.state.ingredients
+        };
+
+        for (let key in disabledInfo) {
+            disabledInfo[key] = disabledInfo[key] <= 0;
+        }
+
         return (
             <React.Fragment>
                 <Burger ingredients={this.state.ingredients} /> 
                 <BuildControls
-                    ingredientChanged={this.changeIngredientHandler} />
+                    ingredientChanged={this.changeIngredientHandler}
+                    disabled={disabledInfo}
+                    price={this.state.totalPrice}
+                    purchaseable={this.state.purchaseable} />
             </React.Fragment>
         )
     }

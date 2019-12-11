@@ -6,7 +6,8 @@ const buildControl = (props) => (
         <div className={classes.Label}>{props.label}</div>
         <button 
             className={classes.Less}
-            onClick={() => props.ingredientChanged(props.label.toLowerCase(), "MINUS")}>Less</button>
+            onClick={() => props.ingredientChanged(props.label.toLowerCase(), "MINUS")}
+            disabled={props.disabled}>Less</button>
         <button 
             className={classes.More}
             onClick={() => props.ingredientChanged(props.label.toLowerCase(), "ADD")}>More</button>

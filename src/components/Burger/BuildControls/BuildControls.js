@@ -15,12 +15,17 @@ const buildControls = (props) => {
            return <BuildControl 
                     key={ctrl.label} 
                     label={ctrl.label}
-                    ingredientChanged={props.ingredientChanged} />
+                    ingredientChanged={props.ingredientChanged}
+                    disabled={props.disabled[ctrl.type]} />
         });
 
     return (
         <div className={classes.BuildControls}>
+            <p>Current Price: <strong>${props.price.toFixed(2)}</strong></p>
             {allControls}
+            <button 
+                className={classes.OrderButton}
+                disabled={!props.purchaseable}>ORDER NOW</button>
         </div>
     )
 };
